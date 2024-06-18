@@ -21,7 +21,7 @@
 前往 `https://github.com/airxiechao/J20/releases`，下载最新程序：
 - 后端服务：`j20-allinone-boot.jar`
 - Flink任务：`j20-detection-job-boot.jar`
-- 流量探针： `j20-probe-network-boot.jar`
+- 流量探针： `j20-probe-network.zip`
 - 前端程序：`j20-frontend.zip`
 
 ## 3. 后端启动
@@ -39,7 +39,7 @@
 在 Openresty 的 `nginx/conf` 中配置前端程序的目录，然后重新加载 Openresty `openresty -s reload`
 
 ## 6. 流量探针启动
-将 `j20-probe-network-boot.jar` 复制到捕获流量的机器上。流量探针的配置文件参考 `J20-config/probe-network.yml`，修改其中的配置：
+将 `j20-probe-network.zip` 复制并解压到捕获流量的机器上。流量探针的配置文件参考 `J20-config/probe-network.yml`，修改其中的配置：
 - capture 捕获配置
   - ip 捕获设备IP
   - protocols 捕获协议，支持 TCP/UDP/HTTP
