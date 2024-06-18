@@ -1,0 +1,17 @@
+captures:
+  - ip: 127.0.0.1
+    protocols:
+      - HTTP
+    output:
+      kafka:
+        bootstrapServers: 127.0.0.1:9092
+        topic: test
+        
+  - ip: 192.168.31.93
+    protocols:
+      - HTTP
+      - TCP
+    output:
+      kafka:
+        bootstrapServers: 127.0.0.1:9092
+        topic: test

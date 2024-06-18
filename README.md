@@ -19,14 +19,14 @@
 
 ## 2. 下载程序
 前往 `https://github.com/airxiechao/J20/releases`，下载最新程序：
-- 后端服务：`j20-allinone-boot.jar`
-- Flink任务：`j20-detection-job-boot.jar`
-- 流量探针： `j20-probe-network.zip`
+- 后端服务：`j20-backend.zip`
 - 前端程序：`j20-frontend.zip`
+- Flink任务：`j20-detection-job-boot.jar`
+- 流量探针：`j20-probe-network.zip`
 
 ## 3. 后端启动
 首先将 `j20-detection-job-boot.jar` 上传到 Flink。
-后端的配置文件参考 `J20-config/application.yml`，修改其中的配置：
+解压 `j20-backend.zip`，后端的配置文件参考 `J20-config/application.yml`，修改其中的配置：
 - spring.datasource 数据库配置
 - flink 配置
 - kafka 配置

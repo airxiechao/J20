@@ -1,0 +1,31 @@
+{
+  "name": "j20-docs",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "The documentation of J20",
+  "engines": {
+    "node": ">=18.12.0",
+    "pnpm": ">=8.7.0"
+  },
+  "scripts": {
+    "build": "vitepress build",
+    "cleanup": "soy cleanup",
+    "commit": "soy git-commit",
+    "dev": "vitepress dev --port 1026",
+    "lint": "eslint . --fix",
+    "preview": "vite preview",
+    "release": "soy release",
+    "serve": "vitepress serve",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
+    "update-pkg": "soy ncu"
+  },
+  "devDependencies": {
+    "@soybeanjs/cli": "1.0.13",
+    "@soybeanjs/eslint-config": "1.3.2",
+    "@types/node": "20.12.7",
+    "eslint": "9.1.1",
+    "typescript": "5.4.5",
+    "vitepress": "1.1.3"
+  },
+  "packageManager": "pnpm@9.1.3+sha512.7c2ea089e1a6af306409c4fc8c4f0897bdac32b772016196c469d9428f1fe2d5a21daf8ad6512762654ac645b5d9136bb210ec9a00afa8dbc4677843ba362ecd"
+}
