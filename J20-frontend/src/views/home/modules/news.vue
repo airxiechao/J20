@@ -20,9 +20,12 @@ interface NewsItem {
 }
 
 const newses = ref<NewsItem[]>([]);
+const loading = ref(false);
 
 // 处理初始化
 async function init() {
+  loading.value = true;
+
   const { error, data } = await fetchListEvent({
     current: 1,
     size: 5,
@@ -36,6 +39,8 @@ async function init() {
       time: dayjs(e.timestamp).format('YYYY-MM-DD HH:mm:ss')
     }));
   }
+
+  loading.value = false;
 }
 
 init();
@@ -48,13 +53,16 @@ init();
         {{ $t('page.statistics.news.more') }}
       </NButton>
     </template>
-    <NList v-if="newses.length > 0">
+    <div v-if="loading" class="h-380px flex place-content-center">
+      <NSpin :stroke-width="35" size="small">
+        <template #description>loading</template>
+      </NSpin>
+    </div>
+    <NList v-else-if="newses.length > 0">
       <NListItem v-for="item in newses" :key="item.id">
-        <!--
         <template #prefix>
-          <icon-bx:error class="font-size-38px color-gray" />
+          <icon-material-symbols:chat-info-rounded class="font-size-35px color-gray" />
         </template>
-        -->
         <NThing :title="item.content" :description="item.time" />
       </NListItem>
     </NList>

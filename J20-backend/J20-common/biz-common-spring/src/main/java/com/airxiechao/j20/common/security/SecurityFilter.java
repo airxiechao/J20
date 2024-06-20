@@ -56,11 +56,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                 }
             }catch (ExpiredJwtException e){
                 // Token 过期
+                log.error("Token过期");
                 Resp resp = new Resp(ConstRespCode.ERROR_TOKEN_EXPIRED,  "Token过期", null);
                 RestUtil.sendResp(response, HttpServletResponse.SC_OK, resp);
                 return;
             }catch (Exception e){
                 // Token 无效
+                log.error("Token无效");
                 Resp resp = new Resp(ConstRespCode.ERROR_TOKEN_INVALID,  "Token无效", null);
                 RestUtil.sendResp(response, HttpServletResponse.SC_OK, resp);
                 return;

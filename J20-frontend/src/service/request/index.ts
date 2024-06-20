@@ -10,6 +10,12 @@ import type { RequestInstanceState } from './type';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
+function delay(milliseconds: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
 export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL,
@@ -82,16 +88,22 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       // when the backend response code is in `expiredTokenCodes`, it means the token is expired, and refresh token
       // the api `refreshToken` can not return error code in `expiredTokenCodes`, otherwise it will be a dead loop, should return `logoutCodes` or `modalLogoutCodes`
       const expiredTokenCodes = import.meta.env.VITE_SERVICE_EXPIRED_TOKEN_CODES?.split(',') || [];
-      if (expiredTokenCodes.includes(response.data.code) && !request.state.isRefreshingToken) {
-        request.state.isRefreshingToken = true;
-
-        const refreshConfig = await handleRefreshToken(response.config);
-
-        request.state.isRefreshingToken = false;
-
-        if (refreshConfig) {
-          return instance.request(refreshConfig) as Promise<AxiosResponse>;
+      if (expiredTokenCodes.includes(response.data.code)) {
+        if (!request.state.isRefreshingToken) {
+          request.state.isRefreshingToken = true;
+          await handleRefreshToken(response.config);
+          request.state.isRefreshingToken = false;
+        } else {
+          await delay(1000);
         }
+
+        // change token
+        const config = { ...response.config };
+        if (config.headers) {
+          config.headers.Authorization = localStg.get('token');
+        }
+
+        return instance.request(config) as Promise<AxiosResponse>;
       }
 
       return null;

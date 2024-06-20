@@ -63,8 +63,8 @@ public class EventService implements IEventService {
                 }
             }
         }
-        if (StringUtils.isNotBlank(ruleId)) {
-            mustTerm.put("taskId.keyword", ruleId);
+        if (StringUtils.isNotBlank(taskId)) {
+            mustTerm.put("taskId.keyword", taskId);
         }
         if (StringUtils.isNotBlank(ruleId)) {
             mustTerm.put("ruleId.keyword", ruleId);
