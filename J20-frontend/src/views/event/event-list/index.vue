@@ -38,7 +38,7 @@ const { columns, data, getData, loading, mobilePagination, searchParams, resetSe
       key: 'level',
       title: $t('page.event.eventList.level'),
       align: 'center',
-      width: 100,
+      width: 150,
       render: row => {
         return $t(`page.event.eventType.level.${row.level || 'NA'}`);
       }
@@ -70,7 +70,7 @@ const { columns, data, getData, loading, mobilePagination, searchParams, resetSe
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 100,
+      width: 150,
       render: row => (
         <div class="flex-center gap-8px">
           <NButton
@@ -134,6 +134,7 @@ function handleClickTreeNode({ option }: { option: TreeOption }) {
 
 <template>
   <div ref="wrapperRef" class="flex gap-16px overflow-hidden lt-sm:overflow-auto">
+    <!--
     <NCard :title="$t('page.event.eventType.title')" :bordered="false" size="small" class="w-280px card-wrapper">
       <NTree
         block-line
@@ -144,6 +145,7 @@ function handleClickTreeNode({ option }: { option: TreeOption }) {
         :node-props="handleClickTreeNode"
       />
     </NCard>
+    -->
     <div class="flex-col-stretch sm:flex-1-hidden gap-16px overflow-hidden lt-sm:overflow-auto">
       <EventSearch v-model:model="searchParams" @reset="handleReset" @search="getData" />
       <NCard

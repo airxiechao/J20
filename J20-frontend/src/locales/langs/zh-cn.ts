@@ -622,7 +622,7 @@ const local: App.I18n.Schema = {
         id: '事件ID',
         title: '事件列表',
         detail: '事件详情',
-        eventTypeId: '事件类型ID',
+        eventTypeId: '事件类型',
         eventTypeName: '事件类型',
         level: '事件级别',
         query: '事件属性',
@@ -638,6 +638,7 @@ const local: App.I18n.Schema = {
           beginTime: '请输入开始时间',
           endTime: '请输入结束时间',
           level: '请选择事件级别',
+          eventTypeId: '请选择事件类型',
           query: '请输入 Lucene 查询语句（选中事件类型时生效）'
         }
       },

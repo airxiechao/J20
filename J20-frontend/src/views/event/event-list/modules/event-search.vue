@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
+import { useEventTypes } from '@/hooks/business/eventTypes';
 
 // 数据
 defineOptions({
@@ -16,6 +17,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
+const { eventTypeOptions } = useEventTypes();
 
 const model = defineModel<Api.Event.EventListParams>('model', { required: true });
 
@@ -66,6 +68,19 @@ async function search() {
             v-model:value="model.level"
             :options="levelOptions"
             :placeholder="$t('page.event.eventList.form.level')"
+            clearable
+          />
+        </NFormItemGi>
+        <NFormItemGi
+          span="24 s:12 m:8"
+          :label="$t('page.event.eventList.eventTypeId')"
+          path="eventTypeId"
+          class="pr-24px"
+        >
+          <NTreeSelect
+            v-model:value="model.eventTypeId"
+            :options="eventTypeOptions"
+            :placeholder="$t('page.event.eventList.form.eventTypeId')"
             clearable
           />
         </NFormItemGi>

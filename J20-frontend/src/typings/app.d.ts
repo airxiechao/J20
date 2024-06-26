@@ -824,6 +824,7 @@ declare namespace App {
               beginTime: string;
               endTime: string;
               level: string;
+              eventTypeId: string;
               query: string;
             };
           };

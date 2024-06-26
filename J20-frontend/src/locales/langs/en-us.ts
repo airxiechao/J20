@@ -622,11 +622,11 @@ const local: App.I18n.Schema = {
         id: 'Event ID',
         title: 'Event List',
         detail: 'Event Detail',
-        eventTypeId: 'Type Id',
-        eventTypeName: 'Type Name',
-        level: 'Level',
+        eventTypeId: 'Event Type',
+        eventTypeName: 'Event Type',
+        level: 'Event Level',
         query: 'Property',
-        message: 'Message',
+        message: 'Event Message',
         taskName: 'Source Task',
         ruleName: 'Matched Rule',
         originalLog: 'Original Log',
@@ -638,6 +638,7 @@ const local: App.I18n.Schema = {
           beginTime: 'Please enter begin Time',
           endTime: 'Please enter end time',
           level: 'Please choose event level',
+          eventTypeId: 'Please choose event type',
           query: 'Please enter lucene query (Takes effect when the event type is selected)'
         }
       },
