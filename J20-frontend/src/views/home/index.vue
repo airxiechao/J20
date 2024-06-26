@@ -6,8 +6,8 @@ import { fetchListDashboardChart } from '@/service/api';
 import CardData from './modules/card-data.vue';
 import LineChart from './modules/line-chart.vue';
 import BarChart from './modules/bar-chart.vue';
-import News from './modules/news.vue';
-import Blank from './modules/blank.vue';
+import NewsTop from './modules/news-top.vue';
+import NewsChart from './modules/news-chart.vue';
 import DashbaordOperateModal from './modules/dashboard-operate-modal.vue';
 
 const appStore = useAppStore();
@@ -68,10 +68,12 @@ init();
     </NGrid>
     <NGrid :x-gap="gap" :y-gap="16" responsive="screen" item-responsive>
       <NGi span="24 s:24 m:14">
-        <News />
+        <NewsTop />
       </NGi>
       <NGi span="24 s:24 m:10">
-        <Blank />
+        <NCard :bordered="false" class="h-full card-wrapper">
+          <NewsChart />
+        </NCard>
       </NGi>
     </NGrid>
     <DashbaordOperateModal v-model:visible="visible" :charts="charts" @submitted="init" />

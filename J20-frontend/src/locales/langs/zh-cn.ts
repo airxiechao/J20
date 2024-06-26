@@ -680,7 +680,8 @@ const local: App.I18n.Schema = {
       sshCount: 'SSH连接（今日）',
       news: {
         title: '告警动态',
-        more: '更多动态'
+        more: '更多动态',
+        chart: '告警分布'
       }
     }
   },

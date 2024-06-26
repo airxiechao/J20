@@ -680,7 +680,8 @@ const local: App.I18n.Schema = {
       sshCount: 'SSH Connect(Today)',
       news: {
         title: 'Alert News',
-        more: 'More Newss'
+        more: 'More News',
+        chart: 'Alert Distribution'
       }
     }
   },

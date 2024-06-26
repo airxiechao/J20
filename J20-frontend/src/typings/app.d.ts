@@ -867,6 +867,7 @@ declare namespace App {
           news: {
             title: string;
             more: string;
+            chart: string;
           };
         };
       };
