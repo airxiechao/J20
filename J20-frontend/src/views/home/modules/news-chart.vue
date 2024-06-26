@@ -14,46 +14,20 @@ defineOptions({
 });
 
 const { domRef, updateOptions } = useEcharts(() => ({
-  dataset: [
-    {
-      dimensions: ['key', 'value'],
-      source: []
-    },
-    {
-      transform: {
-        type: 'sort',
-        config: { dimension: 'value', order: 'asc' }
-      }
-    }
-  ],
+  legend: {
+    orient: 'vertical',
+    left: 'left'
+  },
   tooltip: {
-    trigger: 'axis'
-  },
-  grid: { containLabel: true, x: 0, y: 10, x2: 20, y2: 10 },
-  xAxis: {
-    axisLabel: {
-      formatter(value: number) {
-        const formattedValue = value.toExponential();
-        return formattedValue;
-      }
-    }
-  },
-  yAxis: {
-    type: 'category',
-    axisLine: {
-      show: false
-    }
+    trigger: 'item'
   },
   series: {
-    type: 'bar',
-    encode: {
-      x: 'value',
-      y: 'key'
-    },
+    type: 'pie',
+    roseType: 'area',
     itemStyle: {
-      color: '#5da8ff'
+      borderRadius: 8
     },
-    datasetIndex: 1
+    data: []
   }
 }));
 
@@ -82,8 +56,10 @@ async function init() {
 
   updateOptions(opts => {
     if (data.length > 0) {
-      opts.dataset[0].source = data.map(d => [d.key, d.value]);
-      opts.yAxis.axisLine.show = true;
+      opts.series.data = data.map(d => ({
+        name: d.key,
+        value: d.value
+      }));
       opts.graphic = undefined;
     } else {
       opts.graphic = {
