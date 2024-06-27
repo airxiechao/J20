@@ -52,7 +52,7 @@ async function initChart() {
 }
 
 async function init() {
-  const data = (await initChart()) && [];
+  const data = await initChart();
 
   updateOptions(opts => {
     if (data.length > 0) {
