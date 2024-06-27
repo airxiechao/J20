@@ -52,7 +52,7 @@ async function initChart() {
 }
 
 async function init() {
-  const data = await initChart();
+  const data = (await initChart()) && [];
 
   updateOptions(opts => {
     if (data.length > 0) {
@@ -62,11 +62,12 @@ async function init() {
       }));
       opts.graphic = undefined;
     } else {
+      opts.series.type = undefined;
       opts.graphic = {
         type: 'text',
         left: 'center',
         top: 'middle',
-        style: { text: $t('common.noData') }
+        style: { text: `${$t('page.statistics.news.chart')} - ${$t('common.noData')}` }
       };
     }
 
