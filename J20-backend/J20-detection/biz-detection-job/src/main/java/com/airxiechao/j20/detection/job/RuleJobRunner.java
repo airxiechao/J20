@@ -6,7 +6,6 @@ import com.airxiechao.j20.detection.api.pojo.config.JobConfig;
 import com.airxiechao.j20.detection.api.pojo.rule.Rule;
 import com.airxiechao.j20.detection.api.pojo.task.Task;
 import com.airxiechao.j20.detection.job.common.EventSerializer;
-import com.airxiechao.j20.detection.job.common.MultipleOutputStream;
 import com.airxiechao.j20.detection.util.SortUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.RuntimeExecutionMode;
@@ -68,8 +67,7 @@ public class RuleJobRunner {
                 .setParallelism(1));
 
         // 识别
-        MultipleOutputStream output = recognizeSingleCriteria(stream, rule);
-        SingleOutputStreamOperator<Event> eventOutput = output.getEventOutputStream();
+        SingleOutputStreamOperator<Event> eventOutput = recognizeSingleCriteria(stream, rule);
 
         // 输出
         if(null != eventOutput) {
@@ -85,9 +83,9 @@ public class RuleJobRunner {
      * 识别单个规则
      * @param stream 日志流
      * @param rule 规则
-     * @return 多输出流
+     * @return 输出流
      */
-    public MultipleOutputStream recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
+    public SingleOutputStreamOperator<Event> recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
         Task dummyTask = new Task();
         dummyTask.setRules(List.of(rule));
 

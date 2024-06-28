@@ -10,7 +10,6 @@ import com.airxiechao.j20.detection.api.pojo.task.Task;
 import com.airxiechao.j20.detection.job.AbstractTaskJob;
 import com.airxiechao.j20.detection.job.aggregation.LogAggregationFilter;
 import com.airxiechao.j20.detection.job.common.LogToEventMapFunction;
-import com.airxiechao.j20.detection.job.common.MultipleOutputStream;
 import com.airxiechao.j20.detection.job.frequency.LogFrequencyFilter;
 import com.airxiechao.j20.detection.util.RuleCriteriaUtil;
 import com.alibaba.fastjson2.JSON;
@@ -29,7 +28,7 @@ public class ConditionRuleJob extends AbstractTaskJob {
     }
 
     @Override
-    public MultipleOutputStream recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
+    public SingleOutputStreamOperator<Event> recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
         RuleCriteriaCondition ruleCriteria = JSON.parseObject(rule.getCriteria().toJSONString(), new TypeReference<>(){});
 
         RuleFilterNode filterNode = ruleCriteria.getFilter();
@@ -81,6 +80,6 @@ public class ConditionRuleJob extends AbstractTaskJob {
             );
         }
 
-        return new MultipleOutputStream(eventOutputStream);
+        return eventOutputStream;
     }
 }

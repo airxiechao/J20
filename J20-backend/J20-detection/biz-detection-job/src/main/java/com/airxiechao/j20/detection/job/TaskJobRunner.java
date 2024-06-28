@@ -8,7 +8,6 @@ import com.airxiechao.j20.detection.api.pojo.rule.Rule;
 import com.airxiechao.j20.detection.api.pojo.task.Task;
 import com.airxiechao.j20.detection.job.common.EventSerializer;
 import com.airxiechao.j20.detection.job.common.LogDeserializer;
-import com.airxiechao.j20.detection.job.common.MultipleOutputStream;
 import com.airxiechao.j20.detection.util.SortUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -77,8 +76,7 @@ public class TaskJobRunner {
         .setParallelism(config.getSrcParallelism());
 
         // 识别
-        MultipleOutputStream output = recognize(stream);
-        SingleOutputStreamOperator<Event> eventOutput = output.getEventOutputStream();
+        SingleOutputStreamOperator<Event> eventOutput = recognize(stream);
 
         // 输出
         if(null != eventOutput) {
@@ -93,15 +91,11 @@ public class TaskJobRunner {
     /**
      * 识别多组规则
      * @param stream 日志流
-     * @return 多输出流
+     * @return 输出流
      */
-    protected MultipleOutputStream recognize(DataStreamSource<Log> stream) {
-        List<MultipleOutputStream> outputStreams = task.getRules().stream()
+    protected SingleOutputStreamOperator<Event> recognize(DataStreamSource<Log> stream) {
+        List<SingleOutputStreamOperator<Event>> eventStreams = task.getRules().stream()
                 .map(rule -> recognizeSingleCriteria(stream, rule))
-                .collect(Collectors.toList());
-
-        List<SingleOutputStreamOperator<Event>> eventStreams = outputStreams.stream()
-                .map(MultipleOutputStream::getEventOutputStream)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -114,16 +108,16 @@ public class TaskJobRunner {
         }
 
 
-        return new MultipleOutputStream(eventStream);
+        return eventStream;
     }
 
     /**
      * 识别单个规则
      * @param stream 日志流
      * @param rule 规则
-     * @return 多输出流
+     * @return 输出流
      */
-    public MultipleOutputStream recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
+    public SingleOutputStreamOperator<Event> recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule) {
         AbstractTaskJob taskJob = TaskJobFactory.getInstance().createJob(task, config, rule);
         return taskJob.recognizeSingleCriteria(stream, rule);
     }

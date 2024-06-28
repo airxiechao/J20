@@ -1,12 +1,13 @@
 package com.airxiechao.j20.detection.job;
 
+import com.airxiechao.j20.common.api.pojo.event.Event;
 import com.airxiechao.j20.common.api.pojo.log.Log;
 import com.airxiechao.j20.detection.api.pojo.config.JobConfig;
 import com.airxiechao.j20.detection.api.pojo.rule.Rule;
 import com.airxiechao.j20.detection.api.pojo.task.Task;
-import com.airxiechao.j20.detection.job.common.MultipleOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 
 /**
  * 规则实现的抽象类
@@ -27,6 +28,6 @@ public abstract class AbstractTaskJob {
      * @param rule 规则
      * @return 输出
      */
-    public abstract MultipleOutputStream recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule);
+    public abstract SingleOutputStreamOperator<Event> recognizeSingleCriteria(DataStreamSource<Log> stream, Rule rule);
 
 }
