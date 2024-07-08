@@ -1,10 +1,10 @@
 <script setup lang="tsx">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, type TreeOption } from 'naive-ui';
+import { NButton, NPopconfirm, type TreeOption } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import dayjs from 'dayjs';
-import { fetchListEvent } from '@/service/api';
+import { fetchDeleteEvent, fetchListEvent } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -70,7 +70,7 @@ const { columns, data, getData, loading, mobilePagination, searchParams, resetSe
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 150,
+      width: 200,
       render: row => (
         <div class="flex-center gap-8px">
           <NButton
@@ -81,6 +81,16 @@ const { columns, data, getData, loading, mobilePagination, searchParams, resetSe
           >
             {$t('common.view')}
           </NButton>
+          <NPopconfirm onPositiveClick={() => handleDelete({ id: row.id, timestamp: row.timestamp })}>
+            {{
+              default: () => $t('common.confirmDelete'),
+              trigger: () => (
+                <NButton type="error" ghost size="small">
+                  {$t('common.delete')}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
         </div>
       )
     }
@@ -102,6 +112,19 @@ function handleView({ id, timestamp }: Pick<Api.Event.Event, 'id' | 'timestamp'>
   };
 
   openModal();
+}
+
+// 处理删除事件
+async function handleDelete({ id, timestamp }: Pick<Api.Event.Event, 'id' | 'timestamp'>) {
+  const { error } = await fetchDeleteEvent({
+    id,
+    timestamp
+  });
+
+  if (!error) {
+    loading.value = true;
+    setTimeout(() => getData(), 1000);
+  }
 }
 
 // 处理重置查询

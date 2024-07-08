@@ -50,3 +50,11 @@ export function fetchGetEvent(data: Api.Event.EventGetParams) {
     data
   });
 }
+
+export function fetchDeleteEvent(data: Api.Event.EventDeleteParams) {
+  return request({
+    url: '/detection/event/delete',
+    method: 'post',
+    data
+  });
+}

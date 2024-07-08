@@ -68,4 +68,12 @@ public interface IEventService {
      * @throws Exception 删除异常
      */
     void deleteUntil(Date time) throws Exception;
+
+    /**
+     * 删除事件
+     * @param id ID
+     * @param timestamp 时间戳
+     * @throws Exception 删除异常
+     */
+    void delete(String id, Long timestamp) throws Exception;
 }

@@ -3,6 +3,7 @@ package com.airxiechao.j20.detection.api.rest;
 import com.airxiechao.j20.common.api.pojo.event.Event;
 import com.airxiechao.j20.common.api.pojo.rest.PageData;
 import com.airxiechao.j20.common.api.pojo.rest.Resp;
+import com.airxiechao.j20.detection.api.rest.param.EventDeleteParam;
 import com.airxiechao.j20.detection.api.rest.param.EventGetParam;
 import com.airxiechao.j20.detection.api.rest.param.EventListParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,4 +31,6 @@ public interface IEventController {
     @PostMapping("/api/detection/event/get")
     Resp<Event> get(@RequestBody @Valid EventGetParam param);
 
+    @PostMapping("/api/detection/event/delete")
+    Resp delete(@RequestBody @Valid EventDeleteParam param);
 }

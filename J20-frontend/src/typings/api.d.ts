@@ -290,6 +290,8 @@ declare namespace Api {
     type EventListResp = Common.PaginatingQueryRecord<Event>;
 
     type EventGetParams = Pick<Api.Event.Event, 'id' | 'timestamp'>;
+
+    type EventDeleteParams = Pick<Api.Event.Event, 'id' | 'timestamp'>;
   }
 
   namespace Detection {

@@ -8,6 +8,7 @@ import com.airxiechao.j20.common.api.pojo.vo.PageVo;
 import com.airxiechao.j20.common.api.pojo.vo.TimeRangeVo;
 import com.airxiechao.j20.common.util.TimeUtil;
 import com.airxiechao.j20.detection.api.rest.IEventController;
+import com.airxiechao.j20.detection.api.rest.param.EventDeleteParam;
 import com.airxiechao.j20.detection.api.rest.param.EventGetParam;
 import com.airxiechao.j20.detection.api.rest.param.EventListParam;
 import com.airxiechao.j20.detection.api.service.IEventService;
@@ -67,6 +68,19 @@ public class EventController implements IEventController {
             return new Resp<>(ConstRespCode.OK, null, event);
         }catch (Exception e){
             log.error("查询事件发生错误", e);
+            return new Resp<>(ConstRespCode.ERROR, e.getMessage(), null);
+        }
+    }
+
+    @Override
+    public Resp delete(EventDeleteParam param) {
+        log.info("删除事件：{}", param);
+
+        try {
+            eventService.delete(param.getId(), param.getTimestamp());
+            return new Resp<>(ConstRespCode.OK, null, null);
+        }catch (Exception e){
+            log.error("删除事件发生错误", e);
             return new Resp<>(ConstRespCode.ERROR, e.getMessage(), null);
         }
     }

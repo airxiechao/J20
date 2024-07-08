@@ -137,8 +137,7 @@ public class EventService implements IEventService {
 
     @Override
     public Event get(String id, Long timestamp) throws Exception {
-        Event event = EsManager.getInstance().getClient().searchById(
-                EventUtil.buildSearchEventIndex(new Date(timestamp), new Date(timestamp)), id, Event.class);
+        Event event = EsManager.getInstance().getClient().searchById(buildGetEventIndex(timestamp), id, Event.class);
 
         fillOriginalLog(event);
         fillProperty(event);
@@ -260,6 +259,24 @@ public class EventService implements IEventService {
         }
     }
 
+    @Override
+    public void delete(String id, Long timestamp) throws Exception {
+        Event event = EsManager.getInstance().getClient().searchById(buildGetEventIndex(timestamp), id, Event.class);
+
+        if (null == event) {
+            return;
+        }
+
+        // 删除原始日志
+        deleteOriginalLog(event);
+
+        // 删除事件属性
+        deleteProperty(event);
+
+        // 删除事件
+        EsManager.getInstance().getClient().delete(buildDeleteEventIndex(timestamp), id);
+    }
+
     private EventRef buildEventRef(Event event){
         EventRef eventRef = new EventRef();
         eventRef.setId(event.getId());
@@ -354,6 +371,31 @@ public class EventService implements IEventService {
         }
     }
 
+    private void deleteOriginalLog(Event event) throws Exception {
+        Object originalLog = event.getOriginalLog();
+        if (originalLog instanceof JSONArray) {
+            JSONArray refs = (JSONArray) originalLog;
+            for (int i = 0; i < refs.size(); i++) {
+                OriginalLogRef ref = refs.getJSONObject(i).toJavaObject(OriginalLogRef.class);
+                if (StringUtils.isNotBlank(ref.getId())) {
+                    deleteLog(ref.getId(), event.getTimestamp());
+                }
+            }
+        }
+    }
+
+    private void deleteProperty(Event event) throws Exception {
+        JSONObject property = event.getProperty();
+        if (null == property) {
+            return;
+        }
+
+        EventPropertyRef ref = property.toJavaObject(EventPropertyRef.class);
+        if (StringUtils.isNotBlank(ref.getId())) {
+            deleteProperty(ref.getId(), event.getEventTypeId(), event.getTimestamp());
+        }
+    }
+
     private JSONObject getLog(String id, Long timestamp) throws Exception {
         JSONObject log = EsManager.getInstance().getClient().get(
                 buildAddEventOriginalLogIndex(timestamp), id, JSONObject.class);
@@ -368,7 +410,25 @@ public class EventService implements IEventService {
         return property;
     }
 
+    private void deleteLog(String id, Long timestamp) throws Exception {
+        EsManager.getInstance().getClient().delete(buildAddEventOriginalLogIndex(timestamp), id);
+    }
+
+    private void deleteProperty(String id, String eventTypeId, Long timestamp) throws Exception {
+        EsManager.getInstance().getClient().delete(buildAddEventPropertyIndex(eventTypeId, timestamp), id);
+    }
+
     private String buildAddEventIndex(Long timestamp) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
+        return String.format("%s-%s", eventIndexPrefix, simpleDateFormat.format(new Date(timestamp)));
+    }
+
+    private String buildGetEventIndex(Long timestamp) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
+        return String.format("%s-%s", eventIndexPrefix, simpleDateFormat.format(new Date(timestamp)));
+    }
+
+    private String buildDeleteEventIndex(Long timestamp) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
         return String.format("%s-%s", eventIndexPrefix, simpleDateFormat.format(new Date(timestamp)));
     }

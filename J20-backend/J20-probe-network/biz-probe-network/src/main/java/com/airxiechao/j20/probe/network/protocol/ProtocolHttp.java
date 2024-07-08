@@ -19,7 +19,6 @@ import rawhttp.core.RawHttpRequest;
 import rawhttp.core.RawHttpResponse;
 import rawhttp.core.body.BodyReader;
 import rawhttp.core.body.ChunkedBodyContents;
-import rawhttp.core.body.EagerBodyReader;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -29,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalLong;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -248,6 +246,9 @@ public class ProtocolHttp implements IProtocol {
                             body = bodyReader.decodeBodyToString(StandardCharsets.UTF_8);
                         }
 
+                        // 去除敏感信息
+                        body = desensitizationResponse(body);
+
                         data.setRespJson(body);
                     }
                 } catch (Exception e) {
@@ -305,13 +306,58 @@ public class ProtocolHttp implements IProtocol {
      * @return 脱敏内容
      */
     private String desensitizationRequest(String body){
-        JSONObject jsonBody = JSON.parseObject(body);
+        JSONObject jsonBody = null;
+        try{
+            jsonBody = JSON.parseObject(body);
+        }catch (Exception ignored){
+
+        }
+
         if(null == jsonBody){
             return null;
         }
 
         if(jsonBody.containsKey("password")){
             jsonBody.put("password", "***");
+        }
+
+        if(jsonBody.containsKey("data")){
+            Object data = jsonBody.get("data");
+            if(data instanceof JSONObject){
+                JSONObject jsonData = (JSONObject) data;
+                for (String key : jsonData.keySet()) {
+                    if(key.toLowerCase().endsWith("token")){
+                        jsonData.put(key, "***");
+                    }
+                }
+            }
+        }
+
+        return jsonBody.toJSONString();
+    }
+
+    private String desensitizationResponse(String body){
+        JSONObject jsonBody = null;
+        try{
+            jsonBody = JSON.parseObject(body);
+        }catch (Exception ignored){
+
+        }
+
+        if(null == jsonBody){
+            return null;
+        }
+
+        if(jsonBody.containsKey("data")){
+            Object data = jsonBody.get("data");
+            if(data instanceof JSONObject){
+                JSONObject jsonData = (JSONObject) data;
+                for (String key : jsonData.keySet()) {
+                    if(key.toLowerCase().endsWith("token")){
+                        jsonData.put(key, "***");
+                    }
+                }
+            }
         }
 
         return jsonBody.toJSONString();
